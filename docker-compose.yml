@@ -1,28 +1,12 @@
+version: "3.9"
+
 services:
   web:
-    build:
-      context: .            # Menggunakan Dockerfile dari root folder
-      dockerfile: Dockerfile
+    build: .
     ports:
-      - "8090:80"           # Akses web di http://localhost:8080
+      - "8090:80"
+    env_file:
+      - .env
     volumes:
-      - ./app:/var/www/html
-    depends_on:
-      - db
-
-  db:
-    image: mysql:5.7
-    container_name: manajemengudang-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: manajemengudang
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3310:3306"
-    volumes:
-      - dbdata:/var/lib/mysql
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-
-volumes:
-  dbdata:
+      - ./certs/ca.pem:/etc/mysql/ca.pem:ro
+      - ./app:/var/www/html/app
